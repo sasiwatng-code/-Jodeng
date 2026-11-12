@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>จดเอง</title>
+<meta name="description" content="จดรายรับรายจ่ายง่ายๆ แค่พิมพ์ แยกหมวดให้อัตโนมัติ">
+<meta name="theme-color" content="#16302b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="จดเอง">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef3f1;--sf:#fff;--ink:#16302b;--mut:#6b7f79;--ln:#d5e0dc;--inc:#0f7a5c;--exp:#c2412d;--acc:#16302b;--on:#fff;--bub:#dff0ea;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1917;--sf:#182623;--ink:#e3efeb;--mut:#8aa19a;--ln:#27403a;--inc:#47c9a0;--exp:#f08a76;--acc:#47c9a0;--on:#0f1917;--bub:#1f3a33}}
+:root[data-theme="dark"]{--bg:#0f1917;--sf:#182623;--ink:#e3efeb;--mut:#8aa19a;--ln:#27403a;--inc:#47c9a0;--exp:#f08a76;--acc:#47c9a0;--on:#0f1917;--bub:#1f3a33}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:'Sarabun',system-ui,sans-serif;font-size:16px;display:flex;flex-direction:column}
+nav{display:flex;border-bottom:1px solid var(--ln);background:var(--sf)}
+nav button{flex:1;padding:12px 4px;border:0;background:none;color:var(--mut);font-family:inherit;font-size:15px;font-weight:600;border-bottom:3px solid transparent}
+nav button.on{color:var(--ink);border-bottom-color:var(--acc)}
+main{flex:1;overflow-y:auto;padding:12px}
+section{display:none}section.on{display:block}
+#chat.on{display:flex;flex-direction:column;gap:8px}
+.msg{max-width:88%;padding:9px 12px;border-radius:14px;line-height:1.35}
+.me{align-self:flex-end;background:var(--bub)}
+.bot{align-self:flex-start;background:var(--sf);border:1px solid var(--ln)}
+.amt{font-weight:700}.exp{color:var(--exp)}.inc{color:var(--inc)}
+.tag{display:inline-block;border:1px solid var(--ln);border-radius:99px;padding:1px 10px;font-size:13px;color:var(--mut);background:none;font-family:inherit;margin-top:4px}
+.del{border:0;background:none;color:var(--mut);font-size:13px;padding:4px 0 0 8px;font-family:inherit}
+form{display:flex;gap:8px;padding:10px 12px;background:var(--sf);border-top:1px solid var(--ln)}
+input[type=text]{flex:1;font:inherit;padding:11px 14px;border:1px solid var(--ln);border-radius:99px;background:var(--bg);color:var(--ink);min-width:0}
+.send{border:0;border-radius:99px;background:var(--acc);color:var(--on);font-family:inherit;font-size:16px;font-weight:700;padding:0 18px}
+.hint{color:var(--mut);font-size:14px;line-height:1.5}
+.seg{display:flex;gap:6px;margin-bottom:12px}
+.seg button{flex:1;padding:8px 0;border:1px solid var(--ln);background:var(--sf);color:var(--ink);border-radius:8px;font:inherit}
+.seg button.on{background:var(--acc);color:var(--on);border-color:var(--acc)}
+.seg button{font-size:14px}
+.rg{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.rg input{flex:1;min-width:0;font:inherit;padding:8px;border:1px solid var(--ln);border-radius:8px;background:var(--sf);color:var(--ink)}
+.tot{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.box{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:10px 12px}
+.box small{color:var(--mut);display:block}.box b{font-size:20px}
+.net{grid-column:1/3}
+.bar{margin:10px 0}.bar .t{display:flex;justify-content:space-between;font-size:15px}
+.bar .r{height:8px;background:var(--ln);border-radius:4px;margin-top:3px;overflow:hidden}.bar .r i{display:block;height:100%;background:var(--exp)}
+h3{margin:16px 0 6px;font-size:16px}
+.p{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.p .h{display:flex;justify-content:space-between;align-items:baseline}
+.p .s{color:var(--mut);font-size:14px;margin-top:2px}
+.p ul{margin:6px 0 0;padding:0;list-style:none;font-size:14px;color:var(--mut)}
+.paid{color:var(--inc)}
+.dv{align-self:center;background:var(--ln);color:var(--ink);font-size:13px;padding:3px 14px;border-radius:99px;margin:8px 0 2px}
+.tm{color:var(--mut);font-size:13px;margin-top:4px}
+.fi{width:100%;margin-bottom:8px}
+.sws{display:flex;gap:8px;margin:4px 0 12px}.sw{width:28px;height:28px;border-radius:50%;border:2px solid transparent;padding:0}.sw.on{border-color:var(--ink)}
+#sh{position:fixed;inset:0;z-index:20;display:none}.bk{position:absolute;inset:0;background:rgba(0,0,0,.4)}
+.pn{position:absolute;left:0;right:0;bottom:0;background:var(--sf);padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));border-radius:16px 16px 0 0;display:flex;flex-wrap:wrap;gap:8px;max-height:60%;overflow-y:auto}
+.pn .tag{margin-top:0;font-size:15px;padding:6px 14px;color:var(--ink)}.pn .tag.on{background:var(--acc);color:var(--on);border-color:var(--acc)}
+.ring{position:relative;width:230px;max-width:80%;margin:6px auto 14px}.ring svg{width:100%;display:block}
+.ring .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.ring .c small{color:var(--mut)}.ring .c b{font-size:24px;line-height:1.1}
+.ring circle{transition:stroke-dasharray .5s}
+.lg{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--sf);border:1px solid var(--ln);border-radius:10px;margin-bottom:6px}
+.lg i{width:12px;height:12px;border-radius:50%;flex:none}.lg span{flex:1}.lg em{font-style:normal;color:var(--mut);font-size:14px;margin-left:6px}
+</style>
+</head>
+<body>
+<nav><button data-v="chat" class="on">แชท</button><button data-v="sum">สรุป</button><button data-v="loan">ยืม/คืน</button><button data-v="cat">หมวด</button></nav>
+<main>
+<section id="chat" class="on"></section>
+<section id="sum"></section>
+<section id="loan"></section>
+<section id="cat"></section>
+</main>
+<div id="sh"><div class="bk"></div><div class="pn" id="pn"></div></div>
+<form id="f" autocomplete="off"><input type="text" id="in" placeholder="เช่น ซื้อของทำตู้ไฟ 500บาท" enterkeyhint="send"><button class="send">ส่ง</button></form>
+<script>
+var CATS={
+ 'อาหาร':['ข้าว','กิน','อาหาร','ก๋วยเตี๋ยว','กาแฟ','น้ำ','ส้มตำ','ต้มยำ','ขนม','ชา','เนื้อ','หมู','ไก่','ผัก','ร้านอาหาร','มื้อ','กล้วย','นม','ผลไม้','ไข่','ปลา','กุ้ง','เครื่องดื่ม','โกโก้'],
+ 'น้ำมัน':['น้ำมัน','ดีเซล','เบนซิน','แก๊ส','แก๊ซ','ปตท','เติมรถ','ทางด่วน'],
+ 'ทำงาน':['ทำงาน','งาน','ตู้ไฟ','สายไฟ','อุปกรณ์','วัสดุ','เครื่องมือ','ค่าแรง','ซื้อของ','ลูกค้า','ออฟฟิศ','ปริ้น'],
+ 'ลงทุน':['หุ้น','กองทุน','ลงทุน','คริปโต','ทอง','บิทคอยน์','ปันผล']
+};
+var INC=/(ได้รับ|รับเงิน|รายได้|ขายได้|ขาย|เงินเดือน|กำไร|โบนัส|ปันผล|โอนเข้า)/;
+var KEY='expense-chat-v1',items=[];
+try{items=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){items=[]}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){}}
+var KC='expense-chat-cats-v1',custom=[];
+try{custom=JSON.parse(localStorage.getItem(KC)||'[]')}catch(e){custom=[]}
+function saveCat(){try{localStorage.setItem(KC,JSON.stringify(custom))}catch(e){}}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function fmt(n){return Number(n).toLocaleString('th-TH',{maximumFractionDigits:2})}
+function hit(c,t){var k=(c.kw||[]).concat([c.name]);for(var i=0;i<k.length;i++)if(k[i]&&t.indexOf(k[i])>-1)return true;return false}
+function guess(t){for(var q=0;q<custom.length;q++)if(hit(custom[q],t))return custom[q].name;var o=['น้ำมัน','อาหาร','ลงทุน','ทำงาน'];for(var j=0;j<o.length;j++){var c=o[j];for(var i=0;i<CATS[c].length;i++)if(t.indexOf(CATS[c][i])>-1)return c}return 'อื่นๆ'}
+function splitAll(t){
+ var segs;
+ if(/บาท|฿/.test(t)){
+  segs=t.match(/[^฿]*?\d[\d,]*(?:\.\d+)?\s*(?:บาท|฿)/g)||[t];
+  var rest=t.slice(segs.join('').length);
+  if(segs[0]!==t&&/\d/.test(rest))segs=segs.concat(splitAll(rest));
+ }else{
+  segs=[];
+  t.split(/[\n;]+|,(?!\d)/).forEach(function(ch){var m=ch.match(/[^\d]*\d[\d,]*(?:\.\d+)?/g);if(m&&m.length>1)segs=segs.concat(m);else segs.push(ch)});
+ }
+ return segs.map(function(s){return s.replace(/^[\s,;]+|^และ\s*/,'').trim()}).filter(Boolean);
+}
+function parse(t){
+ var nums=t.match(/\d[\d,]*(?:\.\d+)?/g);
+ if(!nums)return null;
+ var amt=parseFloat(nums[nums.length-1].replace(/,/g,''));
+ if(!(amt>0))return null;
+ var m=t.match(/^(.*?)\s*(ยืม|คืน)/);
+ if(m&&m[1].trim()){return{kind:m[2]=='ยืม'?'lend':'repay',amt:amt,who:m[1].replace(/^คุณ/,'').trim(),cat:'ยืม/คืน',note:t}}
+ var inc=INC.test(t);
+ return{kind:inc?'inc':'exp',amt:amt,cat:inc?'รายรับ':guess(t),note:t.replace(/\d[\d,]*(?:\.\d+)?\s*(บาท|฿|บ\.?)?/g,'').trim()||t}
+}
+function ts(t){var d=new Date(t);return d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}
+function row(it){
+ var sign=it.kind=='inc'||it.kind=='repay'?'+':'-',cls=sign=='+'?'inc':'exp';
+ var head=it.kind=='lend'?esc(it.who)+' ยืมเงิน':it.kind=='repay'?esc(it.who)+' คืนเงิน':esc(it.note);
+ var tag=(it.kind=='lend'||it.kind=='repay')?'<span class="tag" style="cursor:default">'+(it.kind=='lend'?'ให้ยืม':'รับคืน')+'</span>':'<button class="tag" data-c="'+it.id+'">'+esc(it.cat)+'</button>';
+ return head+' <span class="amt '+cls+'">'+sign+fmt(it.amt)+' ฿</span><br>'+tag+'<button class="del" data-d="'+it.id+'">ลบ</button>';
+}
+function dlabel(t){var d=new Date(t),y=new Date();y.setDate(y.getDate()-1);var k=ymd(d);return (k==ymd(new Date())?'วันนี้ · ':k==ymd(y)?'เมื่อวาน · ':'')+d.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
+function tm(t){var d=new Date(t);return d.toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'})+' · '+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})+' น.'}
+function renderChat(){
+ var h='';
+ if(!items.length)h='<div class="hint">พิมพ์รายการแล้วกดส่ง ระบบจะแยกจำนวนเงินและหมวดให้เอง<br>• ซื้อของทำตู้ไฟ 500บาท<br>• เติมน้ำมัน 800<br>• ขายได้ 1200<br>• สมชายยืม 1000<br>• สมชายคืน 300<br>แตะชื่อหมวดเพื่อเปลี่ยนหมวด</div>';
+ var last='';
+ items.forEach(function(it){var dk=ymd(new Date(it.t));if(dk!==last){last=dk;h+='<div class="dv">'+dlabel(it.t)+'</div>'}h+='<div class="msg me">'+esc(it.raw||it.note)+'</div><div class="msg bot">'+row(it)+'<div class="tm">🕒 '+tm(it.t)+'</div></div>'});
+ var c=document.getElementById('chat');c.innerHTML=h;
+ var m=document.querySelector('main');m.scrollTop=m.scrollHeight;
+}
+function ymd(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+var per='day',rf=ymd(new Date(start('month'))),rt=ymd(new Date());
+function start(p){var d=new Date();d.setHours(0,0,0,0);
+ if(p=='week'){var w=(d.getDay()+6)%7;d.setDate(d.getDate()-w)}
+ if(p=='month')d.setDate(1);
+ if(p=='year'){d.setMonth(0,1)}
+ return d.getTime()}
+function renderSum(){
+ var s=start(per),e=Infinity,inc=0,exp=0,by={};
+ if(per=='custom'){s=new Date(rf+'T00:00:00').getTime();e=new Date(rt+'T23:59:59.999').getTime();if(isNaN(s))s=0;if(isNaN(e))e=Infinity;if(s>e){var tmp=s;s=e;e=tmp}}
+ items.forEach(function(it){if(it.t<s||it.t>e)return;
+  if(it.kind=='inc')inc+=it.amt;
+  if(it.kind=='exp'){exp+=it.amt;by[it.cat]=(by[it.cat]||0)+it.amt}});
+ var names={day:'วันนี้',week:'สัปดาห์นี้',month:'เดือนนี้',year:'ปีนี้',custom:'ช่วงที่เลือก'};
+ var h='<div class="seg">';
+ for(var k in names)h+='<button data-p="'+k+'" class="'+(k==per?'on':'')+'">'+(k=='custom'?'กำหนดเอง':names[k])+'</button>';
+ h+='</div>'+(per=='custom'?'<div class="rg"><input type="date" id="rf" value="'+rf+'"><span>ถึง</span><input type="date" id="rt" value="'+rt+'"></div>':'')+'<div class="tot"><div class="box"><small>รายรับ</small><b class="inc">'+fmt(inc)+'</b></div><div class="box"><small>รายจ่าย</small><b class="exp">'+fmt(exp)+'</b></div><div class="box net"><small>คงเหลือ'+names[per]+'</small><b class="'+(inc-exp>=0?'inc':'exp')+'">'+fmt(inc-exp)+' ฿</b></div></div><h3>รายจ่ายแยกหมวด</h3>';
+ var ks=Object.keys(by).sort(function(a,b){return by[b]-by[a]});
+ var COL={'อาหาร':'#e08a2c','น้ำมัน':'#c2412d','ทำงาน':'#2f7fb5','ลงทุน':'#8a63c7','อื่นๆ':'#8a9a95'};
+ custom.forEach(function(c){COL[c.name]=c.color});
+ var C=2*Math.PI*70,cum=0,seg='';
+ ks.forEach(function(k){var len=by[k]/exp*C,g=ks.length>1?3:0,d=Math.max(len-g,0.5);
+  seg+='<circle cx="100" cy="100" r="70" fill="none" stroke="'+(COL[k]||'#8a9a95')+'" stroke-width="24" stroke-dasharray="'+d+' '+(C-d)+'" stroke-dashoffset="'+(-cum)+'" transform="rotate(-90 100 100)"/>';cum+=len});
+ h+='<div class="ring"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="70" fill="none" stroke="var(--ln)" stroke-width="24"/>'+seg+'</svg><div class="c"><small>รายจ่าย'+names[per]+'</small><b class="exp">'+fmt(exp)+'</b><small>บาท</small></div></div>';
+ if(!ks.length)h+='<div class="hint" style="text-align:center">ยังไม่มีรายจ่ายในช่วงนี้</div>';
+ ks.forEach(function(k){var pc=Math.round(by[k]/exp*100);h+='<div class="lg"><i style="background:'+(COL[k]||'#8a9a95')+'"></i><span>'+esc(k)+'<em>'+pc+'%</em></span><b>'+fmt(by[k])+' ฿</b></div>'});
+ document.getElementById('sum').innerHTML=h;
+}
+function renderLoan(){
+ var who={};
+ items.slice().sort(function(a,b){return a.t-b.t}).forEach(function(it){
+  if(it.kind!='lend'&&it.kind!='repay')return;
+  var p=who[it.who]=who[it.who]||{lends:[],log:[],paid:0};
+  if(it.kind=='lend')p.lends.push({t:it.t,amt:it.amt,left:it.amt});
+  else{var r=it.amt;p.paid+=r;p.lends.forEach(function(l){var x=Math.min(l.left,r);l.left-=x;r-=x})}
+  p.log.push(it)});
+ var h='',names=Object.keys(who);
+ if(!names.length)h='<div class="hint">ยังไม่มีรายการยืม<br>พิมพ์ในแชท เช่น "สมชายยืม 1000" หรือ "สมชายคืน 300"</div>';
+ var tot=0;
+ names.forEach(function(n){var p=who[n],bal=0,old=null;
+  p.lends.forEach(function(l){bal+=l.left;if(l.left>0&&old===null)old=l.t});
+  tot+=bal;
+  var st=bal>0?'<b class="exp">ค้าง '+fmt(bal)+' ฿</b>':'<b class="paid">คืนครบแล้ว</b>';
+  var days=old?Math.floor((Date.now()-old)/864e5):0;
+  var sub=bal>0?'ยืมมา '+(days==0?'วันนี้':days+' วัน')+' (ตั้งแต่ '+new Date(old).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'})+')':'';
+  h+='<div class="p"><div class="h"><span>'+esc(n)+'</span>'+st+'</div>'+(sub?'<div class="s">'+sub+'</div>':'')+'<ul>';
+  p.log.slice().reverse().forEach(function(it){h+='<li>'+ts(it.t)+' · '+(it.kind=='lend'?'ยืม ':'คืน ')+fmt(it.amt)+'</li>'});
+  h+='</ul></div>'});
+ if(names.length)h='<div class="box" style="margin-bottom:12px"><small>ยอดค้างรวมทุกคน</small><b class="exp">'+fmt(tot)+' ฿</b></div>'+h;
+ document.getElementById('loan').innerHTML=h;
+}
+var nc='#2f7fb5',sid=null;
+var SW=['#d9534f','#e08a2c','#c9a227','#3f9b6b','#2f7fb5','#8a63c7','#c2548a','#5f7f78'];
+var BC={'อาหาร':'#e08a2c','น้ำมัน':'#c2412d','ทำงาน':'#2f7fb5','ลงทุน':'#8a63c7'};
+function renderCat(){
+ var h='<div class="p"><b>เพิ่มหมวดใหม่</b><div style="margin-top:8px"><input type="text" class="fi" id="cn" placeholder="ชื่อหมวด เช่น ค่าเดินทาง"><input type="text" class="fi" id="ck" placeholder="คำสำคัญ คั่นด้วย , เช่น รถเมล์,แท็กซี่,BTS"><div class="sws">';
+ SW.forEach(function(c){h+='<button type="button" class="sw'+(c==nc?' on':'')+'" data-sw="'+c+'" style="background:'+c+'"></button>'});
+ h+='</div><button class="send" id="ca" style="padding:10px 18px">เพิ่มหมวด</button></div><div class="hint" style="margin-top:8px">พิมพ์รายการที่มีคำสำคัญนี้ ระบบจะจัดเข้าหมวดให้เอง และย้ายรายการเก่าที่เป็น "อื่นๆ" ที่ตรงกันมาด้วย</div></div><h3>หมวดของฉัน</h3>';
+ if(!custom.length)h+='<div class="hint">ยังไม่มีหมวดที่เพิ่มเอง</div>';
+ custom.forEach(function(c,i){h+='<div class="lg"><i style="background:'+c.color+'"></i><span>'+esc(c.name)+'<em>'+esc((c.kw||[]).join(', '))+'</em></span><button class="del" data-dc="'+i+'">ลบ</button></div>'});
+ h+='<h3>หมวดมาตรฐาน</h3>';
+ Object.keys(CATS).forEach(function(k){h+='<div class="lg"><i style="background:'+BC[k]+'"></i><span>'+esc(k)+'</span></div>'});
+ document.getElementById('cat').innerHTML=h}
+function openSheet(it){sid=it.id;var l=Object.keys(CATS).concat(custom.map(function(c){return c.name}),it.kind=='inc'?['รายรับ']:[],['อื่นๆ']),h='';
+ l.forEach(function(c){h+='<button class="tag'+(c==it.cat?' on':'')+'" data-pc="'+esc(c)+'">'+esc(c)+'</button>'});
+ document.getElementById('pn').innerHTML=h;document.getElementById('sh').style.display='block'}
+document.getElementById('sh').addEventListener('click',function(e){if(e.target.classList.contains('bk'))this.style.display='none'});
+function renderAll(){renderChat();renderSum();renderLoan();renderCat()}
+document.getElementById('f').addEventListener('submit',function(e){
+ e.preventDefault();var i=document.getElementById('in'),t=i.value.trim();if(!t)return;
+ var rs=[];splitAll(t).forEach(function(s){var p=parse(s);if(p){p.raw=s;rs.push(p)}});var r=rs[0];
+ if(!r){var c=document.getElementById('chat');c.insertAdjacentHTML('beforeend','<div class="msg me">'+esc(t)+'</div><div class="msg bot">ไม่พบจำนวนเงิน ลองใส่ตัวเลข เช่น "ข้าว 60"</div>');var m=document.querySelector('main');m.scrollTop=m.scrollHeight;i.value='';return}
+ rs.forEach(function(x,n){x.id=Date.now()+'-'+n+Math.random().toString(36).slice(2,5);x.t=Date.now()+n;items.push(x)});save();i.value='';renderAll();
+});
+document.addEventListener('click',function(e){
+ var b=e.target.closest('button');if(!b)return;
+ if(b.dataset.v){document.querySelectorAll('nav button').forEach(function(x){x.classList.toggle('on',x===b)});
+  document.querySelectorAll('section').forEach(function(s){s.classList.toggle('on',s.id==b.dataset.v)});
+  document.getElementById('f').style.display=b.dataset.v=='chat'?'flex':'none';
+  if(b.dataset.v=='chat'){var m=document.querySelector('main');m.scrollTop=m.scrollHeight}}
+ if(b.dataset.p){per=b.dataset.p;renderSum()}
+ if(b.dataset.d){if(confirm('ลบรายการนี้?')){items=items.filter(function(x){return x.id!=b.dataset.d});save();renderAll()}}
+ if(b.dataset.c){var it=items.filter(function(x){return x.id==b.dataset.c})[0];
+  openSheet(it)}
+ if(b.dataset.pc!==undefined){var t2=items.filter(function(x){return x.id==sid})[0];if(t2){t2.cat=b.dataset.pc;save()}document.getElementById('sh').style.display='none';renderAll()}
+ if(b.dataset.sw){nc=b.dataset.sw;document.querySelectorAll('.sw').forEach(function(x){x.classList.toggle('on',x===b)})}
+ if(b.dataset.dc){var c0=custom[+b.dataset.dc];if(c0&&confirm('ลบหมวด '+c0.name+'? (รายการเดิมยังอยู่)')){custom.splice(+b.dataset.dc,1);saveCat();renderAll()}}
+ if(b.id=='ca'){var ni=document.getElementById('cn'),nm=ni.value.trim();if(!nm)return;
+  var ex=Object.keys(CATS).concat(custom.map(function(c){return c.name}),['อื่นๆ','รายรับ','ยืม/คืน']);
+  if(ex.indexOf(nm)>-1){ni.value='';ni.placeholder='มีหมวดนี้อยู่แล้ว ลองชื่ออื่น';return}
+  var kw=document.getElementById('ck').value.split(/[,\n]/).map(function(x){return x.trim()}).filter(Boolean);
+  var cc={name:nm,kw:kw,color:nc};custom.push(cc);
+  items.forEach(function(it){if(it.cat=='อื่นๆ'&&hit(cc,it.raw||it.note||''))it.cat=nm});
+  save();saveCat();renderAll()}
+});
+document.addEventListener('change',function(e){var x=e.target;if(x.id=='rf'||x.id=='rt'){if(x.value){if(x.id=='rf')rf=x.value;else rt=x.value}renderSum()}});
+renderAll();
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
+</script>
+</body>
+</html>
