@@ -68,10 +68,12 @@ h3{margin:16px 0 6px;font-size:16px}
 .ring circle{transition:stroke-dasharray .5s}
 .lg{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--sf);border:1px solid var(--ln);border-radius:10px;margin-bottom:6px}
 .lg i{width:12px;height:12px;border-radius:50%;flex:none}.lg span{flex:1}.lg em{font-style:normal;color:var(--mut);font-size:14px;margin-left:6px}
+.ib{display:none;align-items:center;gap:10px;padding:8px 12px;background:var(--bub);font-size:14px;line-height:1.4}.ib span{flex:1}.ib button{border:0;border-radius:99px;padding:6px 14px;font-family:inherit;font-size:14px;font-weight:700;background:var(--acc);color:var(--on)}.ib button.x{background:none;color:var(--mut);padding:4px 8px;font-size:18px}
 </style>
 </head>
 <body>
 <nav><button data-v="chat" class="on">แชท</button><button data-v="sum">สรุป</button><button data-v="loan">ยืม/คืน</button><button data-v="cat">หมวด</button></nav>
+<div class="ib" id="ib"></div>
 <main>
 <section id="chat" class="on"></section>
 <section id="sum"></section>
@@ -234,6 +236,18 @@ document.addEventListener('click',function(e){
 });
 document.addEventListener('change',function(e){var x=e.target;if(x.id=='rf'||x.id=='rt'){if(x.value){if(x.id=='rf')rf=x.value;else rt=x.value}renderSum()}});
 renderAll();
+var dp=null,ib=document.getElementById('ib');
+function isApp(){return (window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true}
+function showIb(){if(isApp())return;var ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+ if(dp)ib.innerHTML='<span>\u0e15\u0e34\u0e14\u0e15\u0e31\u0e49\u0e07\u0e40\u0e1b\u0e47\u0e19\u0e41\u0e2d\u0e1b\u0e1a\u0e19\u0e21\u0e37\u0e2d\u0e16\u0e37\u0e2d</span><button id="ibi">\u0e15\u0e34\u0e14\u0e15\u0e31\u0e49\u0e07</button><button class="x" id="ibx">\u00d7</button>';
+ else if(ios)ib.innerHTML='<span>\u0e15\u0e34\u0e14\u0e15\u0e31\u0e49\u0e07\u0e41\u0e2d\u0e1b: \u0e01\u0e14\u0e1b\u0e38\u0e48\u0e21\u0e41\u0e0a\u0e23\u0e4c \u2b06\ufe0e \u0e43\u0e19 Safari \u0e41\u0e25\u0e49\u0e27\u0e40\u0e25\u0e37\u0e2d\u0e01 \u201c\u0e40\u0e1e\u0e34\u0e48\u0e21\u0e25\u0e07\u0e43\u0e19\u0e2b\u0e19\u0e49\u0e32\u0e08\u0e2d\u0e42\u0e17\u0e21\u201d</span><button class="x" id="ibx">\u00d7</button>';
+ else return;
+ ib.style.display='flex';
+ var i=document.getElementById('ibi');if(i)i.onclick=function(){dp.prompt();dp.userChoice.then(function(){dp=null;ib.style.display='none'})};
+ document.getElementById('ibx').onclick=function(){ib.style.display='none'}}
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;showIb()});
+window.addEventListener('appinstalled',function(){ib.style.display='none'});
+showIb();
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
 </script>
 </body>
